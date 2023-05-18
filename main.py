@@ -1,5 +1,5 @@
 import os
-from Recommender import User
+from scripts.recommender import User
 
 
 def get_user_input():
@@ -57,9 +57,7 @@ def get_user_input():
 if __name__ == '__main__':
 
     while True:
-        os.system('clear')
-        # For Windows Users
-        # os.system('cls')
+        os.system('cls')
         print('Movie Recommender System')
         print('Press x in any input to exit')
 
@@ -67,8 +65,7 @@ if __name__ == '__main__':
 
         if type(user) == User:
             movies = user.recommend()
-            os.system('clear')
-            # os.system('cls')
+            os.system('cls')
             print('Recommendations:')
             for movie in movies:
                 print(movie)
@@ -76,4 +73,3 @@ if __name__ == '__main__':
         user_input = input('\nx to exit >> ')
         if user_input == 'x':
             break
-

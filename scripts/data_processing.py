@@ -10,7 +10,7 @@ import os
 # Prepare Feature Dataset
 # Output : X_data (np array)
 
-users = pd.read_csv('ml-100k/u.user', names=['age', 'gender', 'occ', 'zip']).drop(columns=['zip'])
+users = pd.read_csv('data/ml-100k/u.user', names=['age', 'gender', 'occ', 'zip']).drop(columns=['zip'])
 
 X_data = []
 tmp = pd.get_dummies(users)
@@ -24,7 +24,7 @@ for i in range(len(tmp)):
     X_data.append(arr)
 
 # Export user_details one_hot header (list)
-with open('Z__user_details_header', 'wb') as f:
+with open('data/user_details_header', 'wb') as f:
     pickle.dump(tmp.columns.tolist(), f)
 
 ages = []
@@ -47,17 +47,17 @@ X_data = np.array(X_data)
 # Prepare Label Dataset
 # Output : y_data (np array)
 
-movies = pd.read_csv('ml-100k/u.item', delimiter=',,', header=None, engine='python').drop(columns=[0, 1, 2, 3, 4, 13])
+movies = pd.read_csv('data/ml-100k/u.item', delimiter=',,', header=None, engine='python').drop(columns=[0, 1, 2, 3, 4, 13])
 genres = ['unknown', 'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime',
           'Documentary', 'Fantasy', 'Film-Noir', 'Horror', 'Musical', 'Mystery',
           'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
 movies.loc[len(movies)] = 0 * len(movies)
-movies.to_csv('tmp', header=None, index=False)
-movies = pd.read_csv('tmp', names=genres)
-os.remove('tmp')
+movies.to_csv('data/tmp', header=None, index=False)
+movies = pd.read_csv('data/tmp', names=genres)
+os.remove('data/tmp')
 
 user_rating = []
-ratings = pd.read_csv('ml-100k/u.data', delimiter='\t', names=['uid', 'mid', 'rating', 'time'])
+ratings = pd.read_csv('data/ml-100k/u.data', delimiter='\t', names=['uid', 'mid', 'rating', 'time'])
 for i in ratings.uid.unique():
     user_rating.append(ratings.loc[ratings.uid == i])
 
@@ -79,7 +79,7 @@ y_data = np.array(y_data)
 
 # Splitting and Generating Datasets
 
-with open('Z__labels', 'wb') as f:
+with open('data/labels', 'wb') as f:
     pickle.dump(labels, f)
     f.close()
 
@@ -87,16 +87,16 @@ X_data, y_data = shuffle(X_data, y_data)
 X_train, X_test = train_test_split(X_data, test_size=0.2)
 y_train, y_test = train_test_split(y_data, test_size=0.2)
 
-np.save('Z__X_train', X_train)
-np.save('Z__y_train', y_train)
-np.save('Z__X_test', X_test)
-np.save('Z__y_test', y_test)
+np.save('data/X_train', X_train)
+np.save('data/y_train', y_train)
+np.save('data/X_test', X_test)
+np.save('data/y_test', y_test)
 
 
 # import user ratings dataset for preprocessing
 # output : extended movies dataset with ratings analytics and genres
 
-df = pd.read_csv('ml-100k/u.data', delimiter='\t', names=['uid', 'mid', 'rating', 'time']).drop(columns=['time'])
+df = pd.read_csv('data/ml-100k/u.data', delimiter='\t', names=['uid', 'mid', 'rating', 'time']).drop(columns=['time'])
 count = df.groupby('mid')['rating'].count().tolist()
 mean = df.groupby('mid')['rating'].mean().tolist()
 
@@ -114,6 +114,6 @@ df = pd.DataFrame(tmp)
 columns = ['mid', 'name', 'a', 'b', 'c', 'unknown', 'Action', 'Adventure', 'Animation', 'Children',
            'Comedy', 'Crime', 'Documentary', 'd', 'Fantasy','Film-Noir', 'Horror', 'Musical',
            'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
-movies = pd.read_csv('ml-100k/u.item', delimiter=',,', names=columns, engine='python').drop(columns=['a', 'b', 'c', 'd'])
+movies = pd.read_csv('data/ml-100k/u.item', delimiter=',,', names=columns, engine='python').drop(columns=['a', 'b', 'c', 'd'])
 movies = movies.merge(df, on='mid')
-movies.to_csv('Z__extended_movies_dataset', index=False)
+movies.to_csv('data/extended_movies_dataset', index=False)

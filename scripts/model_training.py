@@ -31,12 +31,12 @@ nn.add(keras.layers.Dense(units=9, activation='softmax'))
 
 
 # Defining NN Optimizer, Learning Rate and Loss Function
-nn.compile(optimizer=keras.optimizers.Adagrad(learning_rate=0.0001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+nn.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0001), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 
 # Loading Train data
-X_train = np.load('Z__X_train.npy')
-y_train = np.load('Z__y_train.npy')
+X_train = np.load('data/X_train.npy')
+y_train = np.load('data/y_train.npy')
 X_train, y_train = shuffle(X_train, y_train)
 
 
@@ -45,4 +45,4 @@ nn.fit(x=X_train, y=y_train, validation_split=0.1, batch_size=10, epochs=10, ver
 
 
 # Export model
-nn.save('Z__model.h5')
+nn.save('data/model.h5')
